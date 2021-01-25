@@ -85,7 +85,7 @@ func TestNewClient(t *testing.T) {
 		t.Errorf("Different hosts. Got: %s, Expected: %s", c.HostURL, host)
 	}
 
-	if c.QueryParam.Get("appId") != "1234" {
-		t.Errorf("Different apiKeys. Got: %s, Expected: %s", c.QueryParam.Get("appId"), "1234")
+	if c.QueryParam.Get("appid") != "1234" {
+		t.Errorf("Different apiKeys. Got: %s, Expected: %s", c.QueryParam.Get("appid"), "1234")
 	}
 }
