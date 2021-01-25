@@ -1,10 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	"github.com/garciacer87/weatherAPI/src/openweather"
+	"github.com/garciacer87/weatherAPI/server"
 	"github.com/joho/godotenv"
 )
 
@@ -20,12 +21,16 @@ func init() {
 }
 
 func main() {
-	host := os.Getenv("OPENWEATHERMAP_HOST")
-	apiKey := os.Getenv("OPENWEATHERMAP_APIKEY")
+	s := server.New()
 
-	weatherClient := openweather.NewClient(host, apiKey)
-	statusCode, body := weatherClient.GetWeather("", "")
+	port := os.Getenv("SERVER_PORT")
+	if port == "" {
+		log.Println("No port was found on SERVER_PORT env. Using default port 8080")
+		port = "8080"
+	}
 
-	log.Printf("Body: %s", body)
-	log.Printf("Status code: %v", statusCode)
+	err := s.Run(fmt.Sprintf(":%s", port))
+	if err != nil {
+		log.Fatalf("Error trying to serve application: %v", err)
+	}
 }

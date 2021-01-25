@@ -13,7 +13,7 @@ type params struct {
 	country string
 }
 
-var getWeatherTests = []struct {
+var tests = []struct {
 	name     string
 	params   params
 	expected int
@@ -42,11 +42,11 @@ func newResponder(statusCode int) httpmock.Responder {
 }
 
 func TestGetWeather(t *testing.T) {
-	c := NewClient("http://localhost:8081", "1234").(*clientConfig)
+	c := NewClient("http://localhost:8081", "1234", "metric").(*clientConfig)
 	httpmock.ActivateNonDefault(c.GetClient())
 	defer httpmock.DeactivateAndReset()
 
-	for _, test := range getWeatherTests {
+	for _, test := range tests {
 		responder := newResponder(test.expected)
 		httpmock.RegisterResponder("GET", "http://localhost:8081/data/2.5/weather", responder)
 
@@ -59,9 +59,27 @@ func TestGetWeather(t *testing.T) {
 	}
 }
 
+func TestGetForecast(t *testing.T) {
+	c := NewClient("http://localhost:8081", "1234", "metric").(*clientConfig)
+	httpmock.ActivateNonDefault(c.GetClient())
+	defer httpmock.DeactivateAndReset()
+
+	for _, test := range tests {
+		responder := newResponder(test.expected)
+		httpmock.RegisterResponder("GET", "http://localhost:8081/data/2.5/forecast", responder)
+
+		t.Run(test.name, func(t *testing.T) {
+			statusCode, _ := c.GetForecast(test.params.city, test.params.country)
+			if statusCode != test.expected {
+				t.Errorf("Error in test: %s\n Got: %v, Expected: %v", test.name, statusCode, test.expected)
+			}
+		})
+	}
+}
+
 func TestNewClient(t *testing.T) {
 	host := "http://localhost:8081"
-	c := NewClient(host, "1234").(*clientConfig)
+	c := NewClient(host, "1234", "metric").(*clientConfig)
 
 	if c.HostURL != host {
 		t.Errorf("Different hosts. Got: %s, Expected: %s", c.HostURL, host)
