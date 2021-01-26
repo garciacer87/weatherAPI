@@ -30,6 +30,7 @@ $ docker run --env OPENWEATHERMAP_HOST=http://api.openweathermap.org --env OPENW
 
 # Environment Variables
 This application uses a few environment variables to work.
+  - SERVER_PORT **(optional)**: defines the server port. Default value: 8080.
   - OPENWEATHERMAP_HOST **(required)**: this is used to define the OpenWeather API host. Like: http://api.openweathermap.org
   - OPENWEATHERMAP_APIKEY **(required)**: this is used to define the API KEY needed to consume the OpenWeather API.
   - OPENWEATHERMAP_UNIT **(optional)**: this is used to set the unit measurement. Values permitted: "metric" (Cº and m/s), "imperial" (ºF and miles/hr). Default value is "metric".
